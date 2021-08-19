@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{%block title %}Welcome{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <h1 class="display-5 fw-bold p-5 text-center">Welcome to online course reservation system</h1>
+    </div>
+  </div>
+  <div class="row justify-content-md-center p-5">
+    <div class="col-sm-6">
+      <h3 class="text-center">Find your course</h3>
+      <div class="input-group">
+        <input type="search" class="form-control rounded p-3" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+        <button type="button" class="btn btn-outline-primary">search</button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+{% endblock %}

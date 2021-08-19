@@ -1,0 +1,58 @@
+{% extends '../base.html' %}
+{% load static %}
+{%block title %}Create an account{% endblock %}
+{%block content-account %}
+<div id="signup-form">
+  <main class="form-log-sign">
+    <form method="POST">
+      {% csrf_token %}
+      <div class="text-center">
+        <img class="mb-4 " src="{% static 'accounts/icons/user_add_icon.png' %}" alt="" height="80" />
+      </div>
+
+      <h1 class="h3 mb-3 fw-normal text-center">Create an account</h1>
+
+      <div class="row">
+        <div class="col">
+          <div class="form-floating">
+            {{form.first_name}}
+            <label for="id_first_name">First Name</label>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-floating">
+            {{form.last_name}}
+            <label for="id_last_name">Last Name</label>
+            <span class="text-danger">{{form.last_name.errors}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="form-floating">
+        {{form.email}}
+        <label for="id_email">Email address</label>
+        <span class="text-danger">{{form.email.errors}}</span>
+      </div>
+      <div class="form-floating">
+        {{form.password1}}
+        <label for="id_password1">Password</label>
+        <span class="text-danger">{{form.password1.errors}}</span>
+      </div>
+      <div class="form-floating">
+        {{form.password2}}
+        <label for="id_password2">Re-type Password</label>
+        <span class="text-danger list-item">{{form.password2.errors}}</span>
+      </div>
+      <div class="checkbox p-2 mb-3 text-center">
+        <span style="vertical-align: 1px;">I am </span>
+        <label>{{form.is_student}} Student</label>
+        <label>{{form.is_staff}} Lecturer</label>
+        <span class="text-danger list-item">{{form.is_student.errors}}</span>
+        <span class="text-danger list-item">{{form.is_staff.errors}}</span>
+
+      </div>
+      <button class="w-100 btn btn-lg btn-primary" type="submit">Register</button>
+      <p class="text-center p-1">I already have an account <a href="{% url 'accounts:login'%}">login </a>here.</p>
+    </form>
+  </main>
+</div>
+{%endblock%}

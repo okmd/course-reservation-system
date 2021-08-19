@@ -1,0 +1,32 @@
+{% extends '../base.html' %}
+{% load static %}
+{%block title %}Login to account{% endblock %}
+{%block content-account %}
+<div id="login-form">
+  <main class="form-log-sign">
+    <form method="POST" action="{% url 'login' %}">
+      {% csrf_token %}
+      <div class="text-center">
+        <img class="mb-4 " src="{% static 'accounts/icons/user_add_icon.png' %}" alt="" height="80" />
+      </div>
+      <h1 class="h3 mb-3 fw-normal text-center">Login to account</h1>
+
+      <div class="form-floating">
+        {{form.username}}
+        <label for="floatingInput">Email address</label>
+      </div>
+      <div class="form-floating">
+        {{form.password}}
+        <label for="floatingPassword">Password</label>
+      </div>
+      {{form.errors}}
+
+      <div class="checkbox mb-3">
+        <label><input type="checkbox" value="remember-me" /> Remember me</label>
+      </div>
+      <button class="w-100 btn btn-lg btn-primary" type="submit">Login</button>
+      <p class="text-center p-3">I don't have an account <a href="{% url 'accounts:register' %}">create</a> here.</p>
+    </form>
+  </main>
+</div>
+{%endblock%}

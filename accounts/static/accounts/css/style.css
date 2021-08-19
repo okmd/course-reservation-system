@@ -1,0 +1,36 @@
+body{
+    height: 100vh;
+    background-color: #f5f5f5;
+}
+#login-form, #signup-form {
+    display: flex;
+    align-items: center;
+    padding-top: 20px;
+    padding-bottom: 40px;
+}
+.form-log-sign{
+    width: 100%;
+    max-width: 400px;
+    padding: 15px;
+    margin: auto;
+}
+
+.form-log-sign .checkbox {
+    font-weight: 400;
+}
+
+.form-log-sign .form-floating:focus-within {
+    z-index: 2;
+}
+
+.form-log-sign #id_email, #id_username, #id_password1, #id_first_name, #id_last_name  {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.form-log-sign #id_password2 {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}

@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>{%block title%}{% endblock %}</title>
+  {%block meta-data %}{% endblock %}
+  <link rel="stylesheet" href="{% static 'accounts/bootstrap/css/bootstrap.min.css' %}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="{% static 'css/base-style.css' %}" />
+  <script src="{% static 'accounts/bootstrap/js/bootstrap.min.js' %}"></script>
+</head>
+
+<body>
+  <header class="p-2 bg-dark text-white">
+    <div class="container">
+      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <a href="{% url 'app:home' %}">
+          <img src="{% static 'accounts/icons/home.png' %}" class="d-flex align-items-center mb-2 mb-lg-0 text-white"
+            height="50" />
+        </a>
+
+        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+          <li><a href="#" class="nav-link px-2 text-white">Home</a></li>
+          <li><a href="{% url 'app:search' %}" class="nav-link px-2 text-white">Search</a></li>
+          <li><a href="#" class="nav-link px-2 text-white">Details</a></li>
+          <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
+          <li><a href="#" class="nav-link px-2 text-white">About</a></li>
+        </ul>
+
+        <div class="text-end">
+          <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+            {% if user.is_authenticated %}
+            {% if user.is_student %}
+            <a class="nav-link text-white me-2" href="{% url 'app:student-profile' user.id %}">Profile</a>
+
+            {% elif user.is_staff %}
+            <a class="nav-link text-white me-2" href="{% url 'app:lecturer-profile' user.id %}">Profile</a>
+            {% else %}
+            <a class="nav-link text-white me-2" href="{% url 'app:admin-profile' user.id %}">Profile</a>
+            {% endif %}
+
+            
+            <a class="btn btn-warning" href="{% url 'accounts:logout' %}">Logout</a>
+
+            {% else %}
+            <a class="btn btn-outline-light me-2" href="{% url 'accounts:login' %}">Login</a>
+            <a class="btn btn-warning" href="{% url 'accounts:register' %}">Register</a>
+            {% endif %}
+
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+  {%block content%}{%endblock%}
+</body>
+<footer class="footer mt-auto py-3 bg-dark fixed-bottom ">
+  <div class="container">
+    <span class="text-white">Place sticky footer content here.</span>
+  </div>
+</footer>
+
+</html>
