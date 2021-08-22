@@ -1,28 +1,36 @@
-
 {% extends 'base.html' %}
 {% load static %}
 
 {%block title %}Enroll{% endblock %}
 {% block content %}
 <div class="container col-xxl-8 px-2 py-2">
-    <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
-      <div class="col-10 col-sm-8 col-lg-6">
-        <img src="{{object.cover.url}}" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="700" height="500" loading="lazy">
-      </div>
-      <div class="col-lg-6">
-        <h1 class="display-5 fw-bold lh-1 mb-3">{{object.course_name}}</h1>
-        <p class="lead">
-          {{object.description}}
+  <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
+    <div class="col-10 col-sm-8 col-lg-6">
+      <img src="{{object.cover.url}}" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="700"
+        height="500" loading="lazy">
+    </div>
+    <div class="col-lg-6">
+      <h1 class="display-5 fw-bold lh-1 mb-3">{{object.course_name}}</h1>
+      <p class="lead">
+        {{object.description}}
         <hr>
         <spna class="text-muted">Prerequites:</spna>
-        {% for pre in object.prerequisites.all %}
+        {% if course.prerequisites.all %}
+        {% for pre in course.prerequisites.all %}
         <a href="{% url 'app:details' pre.pk %}">{{pre}}</a>
         {% endfor %}
-        </p>
-        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-          <a class="btn btn-success btn-lg px-4 me-md-2" href="{% url 'app:enroll' object.pk %}">Register</a>
-        </div>
+        {% else %}
+        No prerequisites.
+        {% endif %}
+      </p>
+      <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+        {% if user.is_staff %}
+        <a class="btn btn-success btn-lg px-4 me-md-2" href="{% url 'app:teach' object.pk %}">Teach</a>
+        {% else %}
+        <a class="btn btn-success btn-lg px-4 me-md-2" href="{% url 'app:reserve' object.pk %}">Reserve</a>
+        {% endif %}
       </div>
     </div>
   </div>
+</div>
 {% endblock %}

@@ -1,0 +1,70 @@
+{% extends '../base.html' %}
+{% load static %}
+{%block title %}UPdate Student Profile{% endblock %}
+{%block content %}
+<div class="container">
+    <div style="width: 400px; margin: auto;">
+        <main class="form-log-sign">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <h1 class="h3 m-3 fw-normal text-center">Update Your profile</h1>
+                <div class="form-floating">
+                    {{form.student}}
+                    <label for="id_student">Student</label>
+                    <span class="text-danger">{{form.student.errors}}</span>
+                </div>
+                <div class="form-floating">
+                    {{form.lecturer}}
+                    <label for="id_student">Lecturer</label>
+                    <span class="text-danger">{{form.lecturer.errors}}</span>
+                </div>
+
+                <div class="form-floating">
+                    {{form.street_address}}
+                    <label for="id_stree_addess">Street Address</label>
+                    <span class="text-danger">{{form.stree_addesss.errors}}</span>
+                </div>
+                <div class="form-floating">
+                    {{form.locality}}
+                    <label for="id_locality">Locality</label>
+                    <span class="text-danger">{{form.locality.errors}}</span>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-floating">
+                            {{form.district}}
+                            <label for="id_district">District</label>
+                            <span class="text-danger">{{form.district.errors}}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="col-sm-6">
+                        <div class="form-floating">
+                            {{form.state}}
+                            <label for="id_state">State</label>
+                            <span class="text-danger">{{form.state.errors}}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-floating">
+                    {{form.pincode}}
+                    <label for="id_pincode">Pincode</label>
+                    <span class="text-danger list-item">{{form.picode.errors}}</span>
+                </div>
+                <div class="form-floating">
+                    {{form.mobile_number}}
+                    <label for="id_mobile_number">Mobile Number</label>
+                    <span class="text-danger list-item">{{form.mobile_number.errors}}</span>
+                </div>
+                <div class="mb-3">
+                    {{form.profile_pic}}
+                    <span class="text-danger list-item">{{form.profile_pic.errors}}</span>
+                </div>
+                <hr>
+                <button class="w-100 btn btn-lg btn-primary" type="submit">Update</button>
+            </form>
+    </div>
+</div>
+{%endblock%}

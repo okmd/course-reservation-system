@@ -1,7 +1,7 @@
 # course-reservation-system
 This project is part of M.Tech DTU SWE course project.
 
-To use this repository follow this steps.
+To use this repository follow these steps.
 
 ## Windows installation.
     
