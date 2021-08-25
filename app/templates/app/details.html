@@ -27,7 +27,7 @@
         {% if user.is_staff %}
         <a class="btn btn-success btn-lg px-4 me-md-2" href="{% url 'app:teach' object.pk %}">Teach</a>
         {% else %}
-        <a class="btn btn-success btn-lg px-4 me-md-2" href="{% url 'app:reserve' object.pk %}">Reserve</a>
+        <a class="btn btn-success btn-lg px-4 me-md-2" href="{% url 'app:reserve' object.pk user.pk %}">Reserve</a>
         {% endif %}
       </div>
     </div>

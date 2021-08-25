@@ -12,7 +12,7 @@
 </head>
 
 <body>
-  <header class="p-2 bg-dark text-white">
+  <header class="p-2 bg-dark bg-gradient text-white">
     <div class="container">
       <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
         <a href="{% url 'app:home' %}">
@@ -22,21 +22,23 @@
 
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
           <li><a href="{% url 'app:home' %}" class="nav-link px-2 text-white">Search</a></li>
-          <li><a href="}% url 'app:student-profile-create' %}" class="nav-link px-2 text-white">Details</a></li>
-          <li><a href="}% url 'app:lecturer-profile-create' %}" class="nav-link px-2 text-white">FAQs</a></li>
+          <li><a href="{% url 'app:progress' %}" class="nav-link px-2 text-white">Details</a></li>
+          <li><a href="}% url 'app:attendance' %}" class="nav-link px-2 text-white">FAQs</a></li>
           <li><a href="#" class="nav-link px-2 text-white">About</a></li>
         </ul>
 
         <div class="text-end">
           <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
             {% if user.is_authenticated %}
-            {% if user.is_staff %}
+            {% if user.is_superuser %}
+            <a class="nav-link text-white me-2" href="{% url 'admin:index' %}">Dashboard</a>
+            <a class="nav-link text-white me-2" href="{% url 'app:lecturer-profile' user.id %}">{{user.first_name}}</a>
+
+            {% elif user.is_staff %}
             <a class="nav-link text-white me-2" href="{% url 'app:lecturer-profile' user.id %}">{{user.first_name}}</a>
             {% else %}
             <a class="nav-link text-white me-2" href="{% url 'app:student-profile' user.id %}">{{user.first_name}}</a>
             {% endif %}
-
-
             <a class="btn btn-warning" href="{% url 'accounts:logout' %}">Logout</a>
 
             {% else %}
@@ -49,9 +51,11 @@
       </div>
     </div>
   </header>
-  {%block content%}{%endblock%}
+  <div style="margin-bottom: 50px;">
+    {%block content%}{%endblock%}
+  </div>
 </body>
-<footer class="footer mt-auto py-3 bg-dark fixed-bottom ">
+<footer class="footer mt-auto py-3 bg-dark bg-gradient fixed-bottom ">
   <div class="container">
     <div class="row text-center">
       <div class="col-sm-3 text-center">
@@ -64,11 +68,9 @@
         <span class="text-white"> Ashish Kumar Singh<br>2K21/SWE/07</span>
       </div>
       <div class="col-sm-3">
-        <span class="text-white"> Fahad Abdulla<br> 2K21/SWE/09</span>
+        <span class="text-white"> Fahad Abdullah<br> 2K21/SWE/09</span>
       </div>
     </div>
-
-
   </div>
 </footer>
 

@@ -6,35 +6,51 @@
 <div class="container">
     <div class="album py-5 bg-white">
         <div class="container">
-            {% if object_list %}
+            {% if count %}
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-                {% for course in object_list %}
+                {% if user.is_staff %}
+                {% for course in courses %}
                 <div class="col">
                     <div class="card shadow-sm">
-                        <div class="card-header text-center">{{course.course_name}}</div>
+                        <div class="card-header text-center mb-3">{{course.course_name}}</div>
                         <div class="text-center">
                             <img src="{{ course.cover.url }}" class="img-thumbnail" />
                         </div>
                         <div class="card-body">
                             <p class="card-text">{{course.description|truncatewords:"50"}}</p>
                             <div class="d-flex justify-content-between align-items-center">
-                                {% if user.is_staff %}
                                 <a class="btn btn-success" href="{% url 'app:teach' course.pk %}">Teach</a>
-                                {% else %}
-                                <a class="btn btn-success" href="{% url 'app:reserve' course.pk %}">Reserve</a>
-                                {% endif %}
                                 <a class="btn btn-info" href="{% url 'app:details' course.pk %}">Details</a>
                             </div>
                         </div>
                     </div>
                 </div>
                 {% endfor %}
+                {% else %}
+                {% for course, faculty in courses %}
+                <div class="col">
+                    <div class="card shadow-sm">
+                        <div class="card-header text-center mb-3">{{course.course_name}}</div>
+                        <div class="text-center">
+                            <img src="{{ course.cover.url }}" class="img-thumbnail" />
+                        </div>
+                        <div class="card-body">
+                            <p class="text-center m-3">Course From: <b> {{faculty.1}} {{faculty.2}} @  ₹ {{course.course_fee}}</b></p>
+                            <p class="card-text">{{course.description|truncatewords:"50"}}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a class="btn btn-success" href="{% url 'app:reserve' course.pk faculty.0 %}">Reserve</a>
+                                <a class="btn btn-info" href="{% url 'app:details' course.pk %}">Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% endif %}
             </div>
             {% else %}
-            <h3 class="text-center">Sorry, No course found with this query</h3>
+            <h3 class="text-center display-5">Sorry, No course found with this query</h3>
             {% endif %}
         </div>
     </div>
-
 </div>
 {% endblock %}

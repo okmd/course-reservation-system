@@ -1,0 +1,72 @@
+{% extends '../base.html' %}
+{% load static %}
+{%block title %}Progress{% endblock %}
+{%block content %}
+<div class="container">
+    <div class="row m-3">
+        <h2 class="text-center m-3">Course Progress</h2>
+        <div class="row">
+            {% if user.is_staff %}
+            {% for p, sub_p in progress %}
+            <div class="col-sm-4">
+                <div class="card shadow-sm">
+
+                    <div class="text-center">
+                        <img src="{{p.cover.url}}" class="img-thumbnail" />
+                    </div>
+                    <div class="card-body text-center">
+                        <h5 class="card-title"><a href="{% url 'app:details' p.course_id %}"
+                                class="text-decoration-none"> {{p.course_name}} </a></h5>
+                        <p class="card-text">
+                            <b>Total registrations: {{sub_p.count}}.<br>
+                                Total Earning = ₹ {{sub_p.earning}}.<br>
+                            </b>
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            <p class="text-center m-3">NOTE: Course Progress will be visible only if student register for you courses.</p>
+            {% else %}
+
+            {% for p in progress %}
+            <div class="col-sm-4">
+                <div class="card mb-1">
+                    <div class="card-body">
+                        <h5 class="card-title"><a href="{% url 'app:details' p.course_id.pk %}"
+                                class="text-decoration-none"> {{p.course_id.course_name}} </a></h5>
+                        <p class="card-text">
+                            A course from <b>{{p.lecturer_id.lecturer.first_name}}
+                                {{p.lecturer_id.lecturer.last_name}}</b><br>
+                            Course Fee = ₹ {{p.course_fee}}<br>
+                            Enrollment Date = {{p.enrollment_date}}.<br>
+                        </p>
+
+                        <div class="float-left">
+                            <div class="progress mb-2">
+                                <div class="progress-bar bg-success" role="progressbar" aria-valuenow="{{p.progress}}"
+                                    aria-valuemin="0" aria-valuemax="100" style="width:{{p.progress}}%">{{p.progress}}%
+                                    Complete</div>
+                            </div>
+                            {% if p.progress == 100 %}
+                            <p class="text-success">You have successfully completed this course on {{p.completion_date}}
+                                with grade {{p.grade}}.</p>
+                            <a class="btn btn-success" href="{% url 'app:certify' p.course_id.pk p.lecturer_id.pk %}">Generate Certificate</a>
+
+                            {%else%}
+                            <p class="text-danger">Course Not Complete</p>
+                            {% endif %}
+
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{%endblock%}

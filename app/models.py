@@ -13,6 +13,7 @@ class Course(models.Model):
         upload_to="courses", default="courses/default.png", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
+    course_fee = models.IntegerField(default=0)
 
     def __str__(self):
         return self.course_name
@@ -25,12 +26,14 @@ class Catalog(models.Model):
     catalog_id = models.AutoField(primary_key=True)
     catalog_name = models.CharField(max_length=100)
     courses = models.ManyToManyField(Course)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.catalog_name
 
 
-class Base(models.Model):
+class BaseProfile(models.Model):
     street_address = models.CharField(max_length=100, default="Street Address")
     locality = models.CharField(max_length=100, default="Locality")
     district = models.CharField(max_length=20, default="District")
@@ -44,7 +47,7 @@ class Base(models.Model):
         abstract = True
 
 
-class Lecturer(Base):
+class Lecturer(BaseProfile):
     lecturer = models.OneToOneField(CustomUser, limit_choices_to={
                                     'is_staff': True}, on_delete=models.CASCADE, primary_key=True)
     taught = models.ManyToManyField(Course, blank=True)
@@ -53,10 +56,50 @@ class Lecturer(Base):
         return self.lecturer.email
 
 
-class Student(Base):
+class Student(BaseProfile):
     student = models.OneToOneField(CustomUser, limit_choices_to={
                                    'is_student': True}, on_delete=models.CASCADE, primary_key=True)
     enrolled = models.ManyToManyField(Course, blank=True)
 
     def __str__(self):
         return self.student.email
+
+
+# class BaseInterface(models.Model):
+#     course_id = models.ForeignKey(Course, on_delete=models.DO_NOTHING)
+#     student_id = models.ForeignKey(Student, on_delete=models.DO_NOTHING)
+#     lecturer_id = models.ForeignKey(Lecturer, on_delete=models.DO_NOTHING)
+#     class Meta:
+#         abstract=True
+# class StudentClassStatus(models.TextChoices):
+#     PRESENT = 'P'
+#     ABSENT = 'A'
+# class Attendance(BaseInterface):
+#     status = models.CharField(choices=StudentClassStatus.choices, max_length=10)
+#     class_date = models.DateTimeField(auto_now_add=True)
+
+#     def __str__(self):
+#         return f'{self.course_id}-{self.student_id}-{self.lecturer_id}'
+
+class StudentGradeChoices(models.TextChoices):
+    A = 'A'
+    B = 'B'
+    C = 'C'
+    F = 'F'
+class Progress(models.Model):
+    course_id = models.ForeignKey(Course, on_delete=models.DO_NOTHING)
+    student_id = models.ForeignKey(Student, on_delete=models.DO_NOTHING)
+    lecturer_id = models.ForeignKey(Lecturer, on_delete=models.DO_NOTHING)
+    progress = models.IntegerField(default=0)
+    # certified = models.BooleanField(default=False)
+    course_fee = models.IntegerField(default=0)
+    grade = models.CharField(choices=StudentGradeChoices.choices, max_length=10, blank=True)
+    completion_date = models.DateField(blank=True, null=True)
+    enrollment_date = models.DateField(auto_now_add=True)
+
+    class Meta:
+        unique_together = (('course_id', 'student_id', 'lecturer_id'),)
+
+    def __str__(self):
+        return f'{self.course_id}-{self.student_id}-{self.lecturer_id}'
+    
