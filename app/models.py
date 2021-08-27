@@ -42,6 +42,7 @@ class BaseProfile(models.Model):
     mobile_number = models.CharField(max_length=10, default="0000000000")
     profile_pic = models.ImageField(
         upload_to="profile_images", default="courses/default.png")
+    wallet = models.FloatField(default=0)
 
     class Meta:
         abstract = True

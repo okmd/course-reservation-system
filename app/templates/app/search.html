@@ -3,8 +3,9 @@
 
 {%block title %}Enroll{% endblock %}
 {% block content %}
-<div class="container">
-    <div class="album py-5 bg-white">
+
+<div class="container py-2">
+    <div class="album">
         <div class="container">
             {% if count %}
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
@@ -20,6 +21,7 @@
                             <p class="card-text">{{course.description|truncatewords:"50"}}</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <a class="btn btn-success" href="{% url 'app:teach' course.pk %}">Teach</a>
+                                <b class="text-center">₹ {{course.course_fee}}</b>
                                 <a class="btn btn-info" href="{% url 'app:details' course.pk %}">Details</a>
                             </div>
                         </div>
@@ -31,14 +33,16 @@
                 <div class="col">
                     <div class="card shadow-sm">
                         <div class="card-header text-center mb-3">{{course.course_name}}</div>
-                        <div class="text-center">
+                        <div class="text-center" >
                             <img src="{{ course.cover.url }}" class="img-thumbnail" />
                         </div>
                         <div class="card-body">
-                            <p class="text-center m-3">Course From: <b> {{faculty.1}} {{faculty.2}} @  ₹ {{course.course_fee}}</b></p>
+                            <p class="text-center m-3">Course From: <b> {{faculty.1}} {{faculty.2}} @ ₹
+                                    {{course.course_fee}}</b></p>
                             <p class="card-text">{{course.description|truncatewords:"50"}}</p>
                             <div class="d-flex justify-content-between align-items-center">
-                                <a class="btn btn-success" href="{% url 'app:reserve' course.pk faculty.0 %}">Reserve</a>
+                                <a class="btn btn-success"
+                                    href="{% url 'app:reserve' course.pk faculty.0 %}">Reserve</a>
                                 <a class="btn btn-info" href="{% url 'app:details' course.pk %}">Details</a>
                             </div>
                         </div>
@@ -47,10 +51,50 @@
                 {% endfor %}
                 {% endif %}
             </div>
-            {% else %}
-            <h3 class="text-center display-5">Sorry, No course found with this query</h3>
+            {% elif request.GET.catalog != 'on' %}
+            <p class="text-danger display-5 text-center"> There is no course matching with given search query.</p>
             {% endif %}
         </div>
     </div>
+
+    <!-- catalog -->
+    <div class="album">
+        {% if catalogs %}
+        <h5 class="display-5 text-center mb-2"> List of catalogs with courses</h5>
+        <div class="accordion" id="accordionFlushExample">
+            {% for catalog in catalogs %}
+            <div class="accordion-item mb-1">
+                <h2 class="accordion-header" id="{{catalog.pk}}" d="{% cycle 'a' 'b' %}">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#flush-{{catalog.pk}}" aria-expanded="false"
+                        aria-controls="flush-{{catalog.pk}}">
+                        Catalog : {{catalog.catalog_name}}
+                    </button>
+                </h2>
+                <div id="flush-{{catalog.pk}}" class="accordion-collapse collapse" aria-labelledby="{{catalog.pk}}"
+                    data-bs-parent="#accordionFlushExample">
+                    <div class="accordion-body">
+                        {% for course in catalog.courses.all %}
+                        <div class="card mb-1">
+                            <div class="card-body d-flex flex-wrap align-items-center">
+                                <div style="width: 50px;" class="m-3">
+                                    <img src="{{course.cover.url}}" class="img-fluid float-start m-1">
+                                </div>
+                                <div>{{course.course_name}}</b> @ ₹ {{course.course_fee}}</div>
+
+                                <div style="margin-left: auto;"><a href="{%url 'app:details' course.pk %}"
+                                        class="btn btn-info">Details</a></div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {%elif request.GET.catalog == 'on' %}
+            <p class="text-danger display-5 text-center"> There is no catalog matching with given search query.</p>
+            {% endif %}
+    </div>
 </div>
-{% endblock %}
+    {% endblock %}

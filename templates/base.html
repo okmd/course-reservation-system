@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="{% static 'accounts/bootstrap/css/bootstrap.min.css' %}" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="{% static 'css/base-style.css' %}" />
+  <script src="{%static 'js/jquery-3.6.0.min.js' %}"></script>
   <script src="{% static 'accounts/bootstrap/js/bootstrap.min.js' %}"></script>
 </head>
 
@@ -22,9 +23,18 @@
 
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
           <li><a href="{% url 'app:home' %}" class="nav-link px-2 text-white">Search</a></li>
-          <li><a href="{% url 'app:progress' %}" class="nav-link px-2 text-white">Details</a></li>
-          <li><a href="}% url 'app:attendance' %}" class="nav-link px-2 text-white">FAQs</a></li>
-          <li><a href="#" class="nav-link px-2 text-white">About</a></li>
+          {% if user.is_authenticated %}
+          <li><a href="{% url 'app:progress' %}" class="nav-link px-2 text-white">
+              {% if user.is_superuser %}
+              Course Status
+              {%else%}
+              Progress
+              {%endif%}
+            </a></li>
+          {% endif %}
+          <li><a href="{% url 'app:contact' %}" class="nav-link px-2 text-white">Contacts</a></li>
+          <li><a href="{% url 'app:about' %}" class="nav-link px-2 text-white">About</a></li>
+
         </ul>
 
         <div class="text-end">

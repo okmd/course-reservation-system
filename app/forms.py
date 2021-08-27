@@ -14,6 +14,8 @@ def helper(self):
         {'class': 'form-control'})
     self.fields['mobile_number'].widget.attrs.update(
         {'class': 'form-control'})
+    self.fields['wallet'].widget.attrs.update(
+        {'class': 'form-control'})
     self.fields['pincode'].widget.attrs.update({'class': 'form-control'})
     return self
 
@@ -21,7 +23,7 @@ class StudentChangeForm(UserChangeForm):
     class Meta:
         model = Student
         fields = ('student', 'street_address', 'locality', 'district', 'state',
-                  'pincode', 'mobile_number', 'profile_pic')
+                  'pincode', 'mobile_number','wallet', 'profile_pic')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -35,7 +37,7 @@ class LecturerChangeForm(UserChangeForm):
     class Meta:
         model = Lecturer
         fields = ('lecturer', 'street_address', 'locality', 'district', 'state',
-                  'pincode', 'mobile_number', 'profile_pic')
+                  'pincode', 'mobile_number','wallet', 'profile_pic')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

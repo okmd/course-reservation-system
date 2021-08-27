@@ -12,25 +12,52 @@
     <div class="col-lg-6">
       <h1 class="display-5 fw-bold lh-1 mb-3">{{object.course_name}}</h1>
       <p class="lead">
-        {{object.description}}
-        <hr>
-        <spna class="text-muted">Prerequites:</spna>
-        {% if course.prerequisites.all %}
-        {% for pre in course.prerequisites.all %}
-        <a href="{% url 'app:details' pre.pk %}">{{pre}}</a>
-        {% endfor %}
-        {% else %}
-        No prerequisites.
-        {% endif %}
+        {{object.description}}<br>
+      <p>Course Fee <b class="m-1">₹ {{object.course_fee}}</b></p>
+      <hr>
+      <spna class="text-muted">Prerequites:</spna>
+      {% if course.prerequisites.all %}
+      {% for pre in course.prerequisites.all %}
+      <a href="{% url 'app:details' pre.pk %}">{{pre}}</a>
+      {% endfor %}
+      {% else %}
+      No prerequisites.
+      {% endif %}
       </p>
-      <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+      <div class="d-grid gap-2 justify-content-md-start">
         {% if user.is_staff %}
         <a class="btn btn-success btn-lg px-4 me-md-2" href="{% url 'app:teach' object.pk %}">Teach</a>
         {% else %}
-        <a class="btn btn-success btn-lg px-4 me-md-2" href="{% url 'app:reserve' object.pk user.pk %}">Reserve</a>
+        <!-- need to change to provide lid not sid  -->
+        {%if lecturers %}
+        <p class="text-success">This course is available from these Lecturers:</p>
+        {% for lec in lecturers %}
+        <div class="row">
+          <div class="col-sm-6">
+            <b>{{lec.lecturer.first_name}} {{lec.lecturer.last_name}}</b>
+          </div>
+          <div class="col-sm-6">
+            <a class="btn btn-success btn-lg px-4 me-md-2" href="{% url 'app:reserve' object.pk lec.pk %}">Reserve</a>
+          </div>
+        </div>
+        {% endfor %}
+
+        {%endif%}
+
         {% endif %}
       </div>
     </div>
   </div>
+  {% if messages %}
+  <ul class="messages mb-3">
+    {% for message in messages %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <strong>{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}</strong>
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+  </ul>
+  {% endif %}
 </div>
 {% endblock %}

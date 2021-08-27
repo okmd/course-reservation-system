@@ -16,13 +16,13 @@ class CourseAdmin(admin.ModelAdmin):
 
 @admin.register(Lecturer)
 class LecturerAdmin(admin.ModelAdmin):
-    fields = ['taught','lecturer', 'street_address', 'locality', 'district','state', 'pincode', 'mobile_number', 'profile_pic']
-    list_display = ['lecturer', 'street_address', 'locality', 'district','state', 'pincode', 'mobile_number', 'profile_pic']
+    fields = ['taught','lecturer', 'street_address', 'locality', 'district','state','wallet', 'pincode', 'mobile_number', 'profile_pic']
+    list_display = ['lecturer', 'street_address', 'locality', 'district','state','wallet', 'pincode', 'mobile_number', 'profile_pic']
 
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
-    fields = ['enrolled','student','street_address', 'locality', 'district','state', 'pincode', 'mobile_number', 'profile_pic']
-    list_display = ['student', 'street_address', 'locality', 'district','state', 'pincode', 'mobile_number', 'profile_pic']
+    fields = ['enrolled','student','street_address', 'locality', 'district','wallet','state', 'pincode', 'mobile_number', 'profile_pic']
+    list_display = ['student', 'street_address', 'locality', 'district','state','wallet', 'pincode', 'mobile_number', 'profile_pic']
 
 @admin.register(Progress)
 class ProgressAdmin(admin.ModelAdmin):

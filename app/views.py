@@ -1,6 +1,7 @@
-from django.db import models
+from django.db import models, IntegrityError
 from django.http.response import FileResponse, Http404, HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib import messages
 from django.urls import reverse
 from django.views.generic import CreateView
 from django.shortcuts import redirect, render, get_object_or_404
@@ -8,15 +9,15 @@ from django.urls.base import reverse_lazy
 from django.views.generic import DetailView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import UpdateView
-from .models import Lecturer, Student, CustomUser, Course, Progress
+from .models import Catalog, Lecturer, Student, CustomUser, Course, Progress
 from .forms import StudentChangeForm, LecturerChangeForm
 from django.contrib.auth.decorators import login_required
-from django.db.models import Sum
+from django.db.models import Sum, query
 import io
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
-from datetime import date
+from datetime import date, timedelta
 
 # Create your views here.
 
@@ -33,6 +34,12 @@ def get_or_create(model_class, **kwargs):
 def home(request):
     return render(request, 'app/index.html')
 
+def contact(request):
+    return render(request, "app/contact.html")
+
+
+def about(request):
+    return render(request, "app/about.html")
 
 @login_required
 def progress(request):
@@ -111,9 +118,17 @@ def certificate_generation(request, cid, lid):
     buffer.seek(0)
     return FileResponse(buffer, as_attachment=False, filename="certificate.pdf")
 
+def catalog_search(request):
+    query = request.GET.get('query')
+    catalogs = Catalog.objects.filter(catalog_name__contains=query)
+    return render(request, "app/search.html", {"catalogs":catalogs})
+
 
 def SearchResultsView(request):
     query = request.GET.get('query')
+    if request.GET.get('catalog')=='on':
+        return catalog_search(request)
+
     if request.user.is_staff:
         objects = Course.objects.filter(
             course_name__contains=query) | Course.objects.filter(description__contains=query)
@@ -140,15 +155,70 @@ def SearchResultsView(request):
 @login_required
 def course_reserve(request, cid, lid):
     student = get_or_create(Student, student=request.user)
-    student.enrolled.add(cid)
     course = Course.objects.get(course_id=cid)
     lecturer = Lecturer.objects.get(lecturer=lid)
     try:
+        if student.wallet < course.course_fee:
+            raise Exception("You have not sufficient balance in your wallet.")
+
+        # enroll only if prerequisite are satisfied
+        super_set = set(student.enrolled.all().values_list('course_name', flat=True))
+        sub_set =  set(course.prerequisites.all().values_list('course_name', flat=True))
+        if sub_set.issubset(super_set):
+            student.enrolled.add(cid)
+        else:
+            raise Exception(f"You need to take these courses first {sub_set}.")
+
         Progress.objects.create(student_id=student, lecturer_id=lecturer,
-                            course_id=course, course_fee=course.course_fee)
-    except Exception as e:
-        print(e)
-    return redirect('app:student-profile', pk=request.user.pk)
+                                course_id=course, course_fee=course.course_fee)
+
+        student.wallet -= course.course_fee
+        student.save()
+        # add this money to lecturer 
+        lecturer.wallet += course.course_fee
+        lecturer.save()
+        
+    except IntegrityError as e:
+        messages.error(request, "You have already enrolled for this course.")
+
+    except Exception as e :
+        messages.error(request, e)
+    return redirect('app:progress')
+
+
+@login_required
+def course_cancel(request, cid, lid):
+    # give 5-> 100%
+    # 10 days -> 50%
+    # 20 days -> 10%
+    # else 0% refund
+    student = Student.objects.get(student=request.user.pk)
+    course = Course.objects.get(course_id=cid)
+    lecturer = Lecturer.objects.get(lecturer=lid)
+    progress_obj = Progress.objects.filter(
+        student_id=student, lecturer_id=lecturer, course_id=course)
+    progress_instance = progress_obj.get()
+    time_elapsed = date.today() - progress_instance.enrollment_date
+    time_elapsed = time_elapsed.days
+
+    if time_elapsed <= 5:
+        percentange = 1.0
+    elif time_elapsed <= 10:
+        percentange = 0.5
+    elif time_elapsed <= 20:
+        percentange = 0.1
+    else:
+        percentange = 0.0
+
+    progress_obj.delete()
+    student.wallet += (course.course_fee*percentange)
+    student.save()
+    # remove from lecturer
+    lecturer.wallet -= (course.course_fee*percentange)
+    lecturer.save()
+    # also remove from profile
+    student.enrolled.remove(cid)
+    return redirect('app:progress')
 
 
 @login_required
@@ -161,6 +231,24 @@ def course_teach(request, pk):
 class CourseDetailView(LoginRequiredMixin, DetailView):
     model = Course
     template_name = "app/details.html"
+    # this course may be available from different lecturer
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if not self.request.user.is_staff:
+            try:
+                faculties = Lecturer.objects.all()
+                aligned_faculties = []
+                for faculty in faculties:
+                    my_courses = faculty.taught.all()
+                    temp = my_courses.filter(course_id=self.kwargs.get('pk'))
+                    if temp:
+                        aligned_faculties.append(faculty)
+                context['lecturers'] = aligned_faculties
+            except Exception as e:
+                messages.error(self.request, e)
+            
+
+        return context
 
 
 class LecturerView(LoginRequiredMixin, DetailView):
@@ -177,6 +265,15 @@ class StudentView(LoginRequiredMixin, DetailView):
 
     def get_object(self, queryset=None):
         return get_or_create(Student, student=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        try:
+            p = Progress.objects.filter(student_id=self.kwargs.get('pk'))
+            context['courses'] = p
+        except Exception as e:
+            messages.error(self.request, "You have not enrolled for any one the courses.")
+        return context
 
 
 class AdminView(LoginRequiredMixin, DetailView):

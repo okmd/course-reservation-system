@@ -21,7 +21,7 @@ class RegistrationForm(UserCreationForm):
         super().__init__(*args, **kwargs)
         self.fields['is_student'].required = False
         self.fields['first_name'].widget.attrs.update(
-            {'class': 'form-control', 'placeholder': "First name"})
+            {'class': 'form-control', 'placeholder': "First name", 'autofocus':True})
         self.fields['last_name'].widget.attrs.update(
             {'class': 'form-control', 'placeholder': "Last name"})
         self.fields['email'].widget.attrs.update(

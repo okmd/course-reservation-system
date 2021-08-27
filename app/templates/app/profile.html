@@ -2,7 +2,7 @@
 {% load static %}
 {%block title %}Profile{% endblock %}
 {%block content %}
-<div class="container">
+<div class="container" style="margin-bottom: 100px;">
     <div class="row m-3">
         <div class="col-md-4 mb-3">
             <div class="card">
@@ -15,12 +15,16 @@
                             <p class="text-center">Student</p>
                             <p class="text-secondary mb-1">
                                 {{object.student.email}}
+                                <br>
+                                Wallet:<b> ₹ {{object.wallet}}</b>
                             </p>
                             {% elif object.lecturer %}
                             <h4>{{object.lecturer.first_name}} {{object.lecturer.last_name}}</h4>
                             <p class="text-center">Lecturer</p>
                             <p class="text-secondary mb-1">
                                 {{object.lecturer.email}}
+                                <br>
+                                Wallet:<b> ₹ {{object.wallet}}</b>
                             </p>
                             {% endif %}
 
@@ -35,9 +39,11 @@
                                 {{object.pincode}}
                             </p>
                             {% if object.student %}
-                            <a class="btn btn-primary mt-3" href="{% url 'app:student-profile-update' object.pk %}">Update</a>
+                            <a class="btn btn-primary mt-3"
+                                href="{% url 'app:student-profile-update' object.pk %}">Update Profile</a>
                             {% else %}
-                            <a class="btn btn-primary mt-3" href="{% url 'app:lecturer-profile-update' object.pk %}">Update</a>
+                            <a class="btn btn-primary mt-3"
+                                href="{% url 'app:lecturer-profile-update' object.pk %}">Update Profile</a>
                             {% endif %}
                         </div>
                     </div>
@@ -45,49 +51,67 @@
             </div>
         </div>
         <div class="col-md-8">
-            
+
             {% if object.enrolled %}
             <h2 class="text-center m-2">Courses Enrolled</h2>
-                {% for course in object.enrolled.all %}
-                <div class="card m-2">
-                    <div class="card-body">
-                        <h5 class="card-title">{{course.course_name}}</h5>
-                        <hr>
-                        <p class="card-text">
-                            {% if course.prerequisites.all %}
-                            {% for pre in course.prerequisites.all %}
-                            <a href="{% url 'app:details' pre.pk %}">{{pre}}</a>
-                            {% endfor %}
-                            {% else %}
-                                No prerequisites.
-                            {% endif %}
-                            
-                        </p>
-                        <a href="{% url 'app:details' course.pk %}" class="btn btn-info">Details</a>
-                    </div>
+            {% if messages %}
+            <ul class="messages mt-3">
+                {% for message in messages %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong>{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}</strong>
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
                 {% endfor %}
+            </ul>
+            {% endif %}
+            {% for course in courses.all %}
+            <div class="card m-2">
+                <div class="card-body">
+                    <h5 class="card-title">{{course.course_id.course_name}}</h5>
+                    <hr>
+                    <p class="card-text">
+                    <p class="text-dark">A course from:<b> {{course.lecturer_id.lecturer.first_name}} {{course.lecturer_id.lecturer.last_name}}</b>
+                    @ <b>₹ {{course.course_fee}}</b> </p>
+                    {% if course.course_id.prerequisites.all %}
+                    {% for pre in course.prerequisites.all %}
+                    <a href="{% url 'app:details' pre.pk %}">{{pre}}</a>
+                    {% endfor %}
+                    {% else %}
+                    No prerequisites.
+                    {% endif %}
+
+                    </p>
+                    <a href="{% url 'app:details' course.course_id.pk %}" class="btn btn-info">Details</a>
+                </div>
+            </div>
+            {% endfor %}
             {% else %}
             <h2 class="text-center m-2">Courses Taught</h2>
-                {% for course in object.taught.all %}
-                
-                <div class="card m-2">
-                    <div class="card-body">
-                        <h5 class="card-title">{{course.course_name}}</h5>
-                        <hr>
-                        <p class="card-text">
-                            {% for pre in course.prerequisites.all %}
-                            <a href="{% url 'app:details' pre.pk %}">{{pre}}</a>
-                            {% endfor %}
-                        </p>
-                        <a href="{% url 'app:details' course.pk %}" class="btn btn-info">Details</a>
-                    </div>
+            {% for course in object.taught.all %}
+
+            <div class="card m-2">
+                <div class="card-body">
+                    <h5 class="card-title">{{course.course_name}}</h5>
+                    <hr>
+                    <p class="card-text">
+                    <p class="text-dark">Course Fee : <b>₹ {{course.course_fee}}</b></p>
+                    {% if course.course_id.prerequisites.all %}
+                    {% for pre in course.prerequisites.all %}
+                    <a href="{% url 'app:details' pre.pk %}">{{pre}}</a>
+                    {% endfor %}
+                    {% else %}
+                    No prerequisites.
+                    {% endif %}
+                    </p>
+                    <a href="{% url 'app:details' course.pk %}" class="btn btn-info">Details</a>
                 </div>
-                {% endfor %}
+            </div>
+            {% endfor %}
             {% endif %}
-            
-            
-            
+
+
+
         </div>
     </div>
 </div>
