@@ -34,7 +34,7 @@ class LogoutView(LogoutView):
     next_page = reverse_lazy("app:home")
 
 
-class PasswordChangeView(LoginRequiredMixin,PasswordChangeView):
+class PasswordChangeView(LoginRequiredMixin, PasswordChangeView):
     model = CustomUser
     template_name = "accounts/registration/password_change_form.html"
 

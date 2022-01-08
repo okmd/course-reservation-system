@@ -65,49 +65,58 @@
                 {% endfor %}
             </ul>
             {% endif %}
-            {% for course in courses.all %}
-            <div class="card m-2">
-                <div class="card-body">
-                    <h5 class="card-title">{{course.course_id.course_name}}</h5>
-                    <hr>
-                    <p class="card-text">
-                    <p class="text-dark">A course from:<b> {{course.lecturer_id.lecturer.first_name}} {{course.lecturer_id.lecturer.last_name}}</b>
-                    @ <b>₹ {{course.course_fee}}</b> </p>
-                    {% if course.course_id.prerequisites.all %}
-                    {% for pre in course.prerequisites.all %}
-                    <a href="{% url 'app:details' pre.pk %}">{{pre}}</a>
-                    {% endfor %}
-                    {% else %}
-                    No prerequisites.
-                    {% endif %}
+            <div class="row">
+                {% for course in courses.all %}
+                <div class="card m-1 col-md-5">
+                    <div class="card-body">
+                        <h5 class="card-title">{{course.course_id.course_name}}</h5>
+                        <hr>
+                        <p class="card-text">
+                        <p class="text-dark">A course from:<b> {{course.lecturer_id.lecturer.first_name}}
+                                {{course.lecturer_id.lecturer.last_name}}</b>
+                            @ <b>₹ {{course.course_fee}}</b> </p>
+                        {% if course.course_id.prerequisites.all %}
+                        {% for pre in course.course_id.prerequisites.all %}
+                        <a href="{% url 'app:details' pre.pk %}">{{pre}}</a>
+                        {% endfor %}
+                        {% else %}
+                        No prerequisites.
+                        {% endif %}
 
-                    </p>
-                    <a href="{% url 'app:details' course.course_id.pk %}" class="btn btn-info">Details</a>
+                        </p>
+                        <a href="{% url 'app:details' course.course_id.pk %}" class="btn btn-info">Details</a>
+                    </div>
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
             {% else %}
             <h2 class="text-center m-2">Courses Taught</h2>
-            {% for course in object.taught.all %}
+            <div class="row">
 
-            <div class="card m-2">
-                <div class="card-body">
-                    <h5 class="card-title">{{course.course_name}}</h5>
-                    <hr>
-                    <p class="card-text">
-                    <p class="text-dark">Course Fee : <b>₹ {{course.course_fee}}</b></p>
-                    {% if course.course_id.prerequisites.all %}
-                    {% for pre in course.prerequisites.all %}
-                    <a href="{% url 'app:details' pre.pk %}">{{pre}}</a>
-                    {% endfor %}
-                    {% else %}
-                    No prerequisites.
-                    {% endif %}
-                    </p>
-                    <a href="{% url 'app:details' course.pk %}" class="btn btn-info">Details</a>
+
+                {% for course in object.taught.all %}
+
+
+                <div class="card m-1 col-md-5">
+                    <div class="card-body">
+                        <h5 class="card-title">{{course.course_name}}</h5>
+                        <hr>
+                        <p class="card-text">
+                        <p class="text-dark">Course Fee : <b>₹ {{course.course_fee}}</b></p>
+                        {% if course.prerequisites.all %}
+                        {% for pre in course.prerequisites.all %}
+                        <a href="{% url 'app:details' pre.pk %}">{{pre}}</a>
+                        {% endfor %}
+                        {% else %}
+                        No prerequisites.
+                        {% endif %}
+                        </p>
+                        <a href="{% url 'app:details' course.pk %}" class="btn btn-info">Details</a>
+                    </div>
                 </div>
+
+                {% endfor %}
             </div>
-            {% endfor %}
             {% endif %}
 
 

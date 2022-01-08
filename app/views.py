@@ -88,7 +88,7 @@ def certificate_generation(request, cid, lid):
     message = [
         "~~~~~~~~~~~~~~~~~~~~~~ CERTIFICATE ~~~~~~~~~~~~~~~~~~~~~~",
         " ",
-        f"Congarulations!, {student_name}".center(100),
+        f"Congratulations!, {student_name}".center(100),
         " ",
         "This is certify that".center(110),
         f"{student_name}".center(110),

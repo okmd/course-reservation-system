@@ -7,7 +7,7 @@ from accounts.models import CustomUser
 class Course(models.Model):
     course_id = models.AutoField(primary_key=True)
     course_name = models.CharField(max_length=200)
-    prerequisites = models.ManyToManyField("self", blank=True)
+    prerequisites = models.ManyToManyField("self", blank=True, symmetrical=False)
     description = models.TextField(blank=True)
     cover = models.ImageField(
         upload_to="courses", default="courses/default.png", blank=True)

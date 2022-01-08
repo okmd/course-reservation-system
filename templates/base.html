@@ -49,6 +49,7 @@
             {% else %}
             <a class="nav-link text-white me-2" href="{% url 'app:student-profile' user.id %}">{{user.first_name}}</a>
             {% endif %}
+            <a class="nav-link text-white me-2" href="{% url 'accounts:password_change' %}">Change Password</a>
             <a class="btn btn-warning" href="{% url 'accounts:logout' %}">Logout</a>
 
             {% else %}
