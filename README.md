@@ -16,6 +16,18 @@ To use this repository follow these steps.
     > python manage.py migrate
     > python manage.py createsuperuser
     > python manage.py runserver
+    
+# Screenshots
 
-Now, go to http://127.0.0.1:8000/
+# Profile
+![Profile](screenshot/fac-profile.JPG?raw=true)
+
+# Login
+![Profile](screenshot/login.JPG?raw=true)
+
+# Progress
+![Profile](screenshot/stu-progress.JPG?raw=true)
+
+# Course Status
+![Profile](screenshot/fac-course-status.JPG?raw=true)
 
