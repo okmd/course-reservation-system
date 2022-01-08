@@ -19,15 +19,19 @@ To use this repository follow these steps.
     
 # Screenshots
 
+
+# Search
+![Search](screenshot/search.JPG?raw=true)
+
 # Profile
 ![Profile](screenshot/fac-profile.JPG?raw=true)
 
 # Login
-![Profile](screenshot/login.JPG?raw=true)
+![Login](screenshot/login.JPG?raw=true)
 
 # Progress
-![Profile](screenshot/stu-progress.JPG?raw=true)
+![Progress](screenshot/stu-progress.JPG?raw=true)
 
 # Course Status
-![Profile](screenshot/fac-course-status.JPG?raw=true)
+![Courses](screenshot/fac-course-status.JPG?raw=true)
 
