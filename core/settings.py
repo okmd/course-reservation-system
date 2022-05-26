@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-
+import django_heroku
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-q)7pgh(q#rbljsj6eyj5-h9u33#h^aga2+5u-li6eu9jg0_1)e'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['localhost']
 
@@ -136,3 +136,6 @@ EMAIL_FILE_PATH = BASE_DIR /'sent_emails'
 
 MEDIA_ROOT = BASE_DIR/'media'
 MEDIA_URL = '/media/'
+
+
+django_heroku.settings(locals())
